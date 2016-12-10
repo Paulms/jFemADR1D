@@ -23,9 +23,10 @@ annotate!(0.2,u(0.45,ϵ), text("epsilon: $ϵ",10))
 
 #Medimos el tiempo
 @time fem1D_dar(ϵ, α, β, u0, u1, f, 3, 2)
-@time fem1D_dar(ϵ, α, β, u0, u1, f, 100000, 2)
+@time fem1D_dar(ϵ, α, β, u0, u1, f, 500000, 2)
+#@code_warntype fem1D_dar(ϵ, α, β, u0, u1, f, 3, 2)
 #Profile.init(delay=0.001)
 #Profile.clear()
-#@profile fem1D_dar(ϵ, α, β, u0, u1, f, 100000, 2)
+#@profile fem1D_dar(ϵ, α, β, u0, u1, f, 500000, 2)
 #using ProfileView
 #ProfileView.view()

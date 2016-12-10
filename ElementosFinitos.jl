@@ -68,16 +68,17 @@ function fem1D_dar(ϵ::Real, α::Real, β::Real, u0::Real, u1::Real, f, nelem::I
     iA = Array{Int64}(nelem,nod,nod); jA = Array{Int64}(nelem,nod,nod); sA = zeros(nelem,nod,nod);
     #A = spzeros(nnodos,nnodos);
     F = zeros(nnodos);
-    Ft_local = zeros(nnodos);
+    Ft_local = zeros(grado+1);
     Kt_local = zeros(grado+1,grado+1)
     i1 = 0
     j1 = 0
+    #if partition is uniform we only need to calculate Kt_local once
+    a1 = 1
+    a2 = grado + 1
+    Ft_local = get_Ft_local(coordenadas[a1:a2],P,dP,nodes, weights)*
+    [f(coordenadas[i]) for i in a1:a2]
+    Kt_local = get_Kt_local(ϵ, α, β, coordenadas[a1:a2],P,dP,nodes, weights)
     for elem = 1:nelem
-        a1 = grado*elem - (grado-1)
-        a2 = grado*elem + 1
-        Ft_local = get_Ft_local(coordenadas[a1:a2],P,dP,nodes, weights)*
-        [f(coordenadas[i]) for i in a1:a2]
-        Kt_local = get_Kt_local(ϵ, α, β, coordenadas[a1:a2],P,dP,nodes, weights)
         for i = 1:(grado+1)
             i1 = conectividad[i,elem]
             for j = 1:(grado+1)
@@ -99,6 +100,3 @@ function fem1D_dar(ϵ::Real, α::Real, β::Real, u0::Real, u1::Real, f, nelem::I
     uh = A\F;
     return coordenadas, uh
 end
-# Solution of the 1D problem
-# Elements available: picewise polynomials of first and second order
-using ForwardDiff
